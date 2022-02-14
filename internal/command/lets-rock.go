@@ -31,7 +31,7 @@ func RockNRoll() {
 		conn,
 		&accs,
 		`
-		select coinlist_accs.id, cc.cid, status_verify, rm.email, rm.password from coinlist_accs 
+		select coinlist_accs.id, cc.cid,  coinlist_accs.created_at, status_verify, rm.email, rm.password from coinlist_accs 
 		LEFT JOIN (select id,cid from clients) as cc 
 		ON cc.id = coinlist_accs.client_id
 		LEFT JOIN (select id, email, password from rambler_mails) as rm 
@@ -42,6 +42,7 @@ func RockNRoll() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	var maxWorkers int
 
 	if len(accs) < 10 {
@@ -49,12 +50,10 @@ func RockNRoll() {
 	} else {
 		maxWorkers = 10
 	}
-	fmt.Println(maxWorkers)
 	wp := workerpool.New(maxWorkers)
 	for _, i := range accs {
 		r := i
 		wp.Submit(func() {
-			fmt.Println(r)
 			checker.Verify(r)
 		})
 	}

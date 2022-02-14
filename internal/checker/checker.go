@@ -12,6 +12,7 @@ import (
 	"main/internal/structures"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func Verify(i structures.CoinlistAccs) {
@@ -24,10 +25,21 @@ func Verify(i structures.CoinlistAccs) {
 		Prefix:     GenerateString(20),
 		FilePrefix: filePrefix,
 	}
+	diff := checkTimer(args)
+	if diff >= 10 {
+		api.FukVerificateStatus(args.I)
+	} else {
+		FirstStep(ctx, args)
+		SecondStep(ctx, args)
+	}
 
-	FirstStep(ctx, args)
-	SecondStep(ctx, args)
+}
 
+func checkTimer(args structures.Args) int {
+	t1 := args.I.CreatedAt
+	fmt.Println(time.Now())
+	t2 := time.Now()
+	return int(t2.Sub(t1).Hours() / 24)
 }
 
 func FirstStep(ctx context.Context, args structures.Args) {

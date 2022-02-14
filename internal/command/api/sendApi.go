@@ -58,3 +58,26 @@ func ChangeVerificationStatus(i structures.CoinlistAccs) {
 	fmt.Println(string(body))
 
 }
+func FukVerificateStatus(i structures.CoinlistAccs) {
+	reqBody, err := json.Marshal(map[string]string{
+		"id":     strconv.FormatInt(int64(i.Id), 10),
+		"status": "Later",
+		"cid":    strconv.FormatInt(i.CID, 10),
+	})
+	if err != nil {
+		print(err)
+	}
+
+	resp, err := http.Post("http://investments-api-ms-nginx/api/v1/coinlist/send/fukVerification",
+		"application/x-www-form-urlencoded", bytes.NewBuffer(reqBody))
+	if err != nil {
+		print(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		print(err)
+	}
+	fmt.Println(string(body))
+
+}
