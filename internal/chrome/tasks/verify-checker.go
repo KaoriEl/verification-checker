@@ -9,16 +9,11 @@ import (
 const (
 	// LetLink Find CoinList
 	LetLink                          = `let link = document.querySelectorAll('span');`
-	ConvertToArrayAndFilterByText    = `link = Array.from( link ).filter( e => (/Please verify your email address/i).test( e.textContent ) );`
-	ClickOnTheFirstElementOfTheArray = `if (link.length > 0){ link[0].click(); link[0].textContent; }else{ link = "Not found" }`
-
-	// LetLinkHref Get Href verify
-	LetLinkHref                        = `let linkHref = document.querySelectorAll('a');`
-	ConvertToArrayAndFilterByTextHref  = `linkHref = Array.from( linkHref ).filter( e => (/Verify your email/i).test( e.textContent ) );`
-	GetHrefOnTheFirstElementOfTheArray = `linkHref[0].getAttribute("href");`
+	ConvertToArrayAndFilterByText    = `link = Array.from( link ).filter( e => (/Your account is ready - Start trading now/i).test( e.textContent ) );`
+	ClickOnTheFirstElementOfTheArray = `if (link.length > 0){ link = "found" }else{ link = "Not found" }`
 )
 
-func RamblerFirstStep(url string, i structures.AccInfo, buffer *[]byte) chromedp.Tasks {
+func RamblerFirstStep(url string, i structures.CoinlistAccs, buffer *[]byte) chromedp.Tasks {
 	return chromedp.Tasks{
 		chromedp.Navigate(url),
 		chromedp.WaitVisible(`//*[@id="login"]`),
@@ -38,15 +33,5 @@ func RamblerSecondStep(res *string, buffer *[]byte) chromedp.Tasks {
 		chromedp.WaitVisible(`//*[@id="app"]/div[2]/div[3]/div[2]/div[2]/div[1]/div/div/div[1]/div/div/div/div`),
 		chromedp.Sleep(1 * time.Second),
 		chromedp.Evaluate(LetLink+ConvertToArrayAndFilterByText+ClickOnTheFirstElementOfTheArray, &res),
-	}
-}
-
-func RamblerThirdStep(quality int, buffer *[]byte, res *string) chromedp.Tasks {
-	return chromedp.Tasks{
-		chromedp.WaitVisible(`//*[@id="app"]/div[2]/div[3]/div[2]/div[2]/div[1]/div/div[1]/div[2]/div[1]`),
-		chromedp.Sleep(1 * time.Second),
-		chromedp.Evaluate(LetLinkHref+ConvertToArrayAndFilterByTextHref+GetHrefOnTheFirstElementOfTheArray, &res),
-		chromedp.Sleep(1 * time.Second),
-		chromedp.FullScreenshot(buffer, quality),
 	}
 }

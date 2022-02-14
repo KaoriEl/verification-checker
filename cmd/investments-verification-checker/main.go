@@ -1,9 +1,11 @@
 package main
 
 import (
-	"main/internal/checker"
+	"github.com/jasonlvhit/gocron"
+	"main/internal/command"
 )
 
 func main() {
-	checker.Verify()
+	gocron.Every(1).Hour().Do(command.RockNRoll)
+	<-gocron.Start()
 }

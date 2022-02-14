@@ -1,7 +1,7 @@
 package structures
 
 type Args struct {
-	I          AccInfo
+	I          CoinlistAccs
 	Prefix     string
 	FilePrefix string
 }
