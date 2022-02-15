@@ -10,6 +10,7 @@ Docker build stage:
     - docker:dind
   script:
     - cp ${ENV_STAGE} ./configs/.env      
+    - cp ${CHROME_SETTINGS} ./configs/chrome/chrome.json  
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
     - echo "Build widgets"
     - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/${CI_PROJECT_NAME}-verification-checker:stage -f ./build/package/production/Dockerfile .
@@ -23,7 +24,8 @@ Docker build stage:
 Deploy to stage:
   stage: deploy
   script:
-    - cp ${ENV_STAGE} ./configs/.env      
+    - cp ${ENV_STAGE} ./configs/.env  
+    - cp ${CHROME_SETTINGS} ./configs/chrome/chrome.json      
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
     - cd ~/investments-stage
     - docker-compose pull
@@ -40,6 +42,8 @@ Docker build prod:
   services:
     - docker:dind
   script:
+    - cp ${ENV_STAGE} ./configs/.env      
+    - cp ${CHROME_SETTINGS} ./configs/chrome/chrome.json  
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
     - echo "Build widgets"
     - docker build -t ${CI_REGISTRY}/${CI_PROJECT_PATH}/${CI_PROJECT_NAME}-verification-checker:prod -f ./build/package/production/Dockerfile .
@@ -53,6 +57,8 @@ Docker build prod:
 Deploy to prod:
   stage: deploy
   script:
+    - cp ${ENV_STAGE} ./configs/.env      
+    - cp ${CHROME_SETTINGS} ./configs/chrome/chrome.json  
     - ssh prod "docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY} && cd /home/gitlab-runner/investments-prod && docker-compose pull && docker-compose up -d --force-recreat"
   tags:
     - invest-stage-shell
