@@ -24,6 +24,7 @@ WORKDIR /var/www/investments-verification-checker
 RUN go build -o /app/verification-checker -v /var/www/investments-verification-checker/cmd/investments-verification-checker/main.go
 
 COPY ./configs/.env /app/configs/.env
+
 COPY ./configs/chrome/chrome.json /app/configs/chrome/chrome.json
 
 WORKDIR /app
