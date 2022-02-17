@@ -25,6 +25,8 @@ RUN go build -o /app/verification-checker -v /var/www/investments-verification-c
 
 COPY ./configs/.env /app/configs/.env
 
+COPY ./configs/chrome/chrome.json /app/configs/chrome/chrome.json
+
 WORKDIR /app
 
 
